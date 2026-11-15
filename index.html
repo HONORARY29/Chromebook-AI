@@ -1,165 +1,58 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#111827">
-  <meta name="description" content="Private local AI chat for Chromebook using WebGPU.">
-  <link rel="manifest" href="./manifest.webmanifest">
-  <title>Chromebook AI</title>
-  <style>
-    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
-    * { box-sizing: border-box; }
-    body { margin:0; background:#0b1020; color:#edf2ff; min-height:100vh; }
-    header { padding:18px max(16px,calc((100vw - 900px)/2)); border-bottom:1px solid #29324a; background:#111827; }
-    h1 { font-size:1.25rem; margin:0 0 4px; }
-    #status { color:#aab7d2; font-size:.9rem; }
-    main { max-width:900px; margin:auto; padding:16px; display:flex; flex-direction:column; min-height:calc(100vh - 76px); gap:12px; }
-    .toolbar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-    button { font:inherit; border:1px solid #3a4765; border-radius:10px; padding:9px 12px; background:#1a2540; color:#fff; }
-    button:disabled { opacity:.45; }
-    #progress { color:#aab7d2; font-size:.85rem; min-height:1.2em; }
-    #chat { flex:1; min-height:300px; overflow:auto; display:flex; flex-direction:column; gap:12px; padding:4px 0 12px; }
-    .bubble { white-space:pre-wrap; overflow-wrap:anywhere; padding:12px 14px; border-radius:14px; max-width:88%; line-height:1.45; }
-    .user { align-self:flex-end; background:#254a80; }
-    .assistant { align-self:flex-start; background:#1a2540; border:1px solid #303d5b; }
-    .composer { display:flex; gap:8px; align-items:stretch; }
-    textarea { flex:1; min-height:54px; max-height:160px; resize:vertical; border:1px solid #3a4765; border-radius:12px; padding:12px; color:#fff; background:#111827; font:inherit; }
-    .note { color:#9eabc5; font-size:.8rem; line-height:1.4; }
-    @media(max-width:560px){ .composer{flex-direction:column} .bubble{max-width:96%} }
-  </style>
-</head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827"><link rel="manifest" href="./manifest.webmanifest">
+<title>Chromebook AI</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif}*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:#edf2ff}header{padding:16px max(16px,calc((100vw - 920px)/2));background:#111827;border-bottom:1px solid #29324a}
+h1{font-size:1.25rem;margin:0 0 4px}#status,.muted{color:#aab7d2;font-size:.88rem}
+main{max-width:920px;margin:auto;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:calc(100vh - 70px)}
+button,a.btn{font:inherit;color:#fff;background:#1a2540;border:1px solid #3a4765;border-radius:10px;padding:9px 12px;text-decoration:none;display:inline-block}
+button:disabled{opacity:.45}.toolbar,.remote-grid{display:flex;flex-wrap:wrap;gap:8px}
+.remote-panel{border:1px solid #3a4765;border-radius:14px;padding:14px;background:#111827}
+.remote-panel h2{font-size:1.05rem;margin:0 0 10px}.remote-card{flex:1 1 220px;border:1px solid #303d5b;border-radius:12px;padding:12px;background:#17223a}
+.remote-card h3{font-size:.95rem;margin:0 0 6px}.remote-card p{color:#aab7d2;font-size:.82rem;line-height:1.4;margin:0 0 10px}
+.warning{color:#f2d59a;font-size:.8rem;line-height:1.45;margin-top:10px}
+#remoteSteps{font-size:.83rem;line-height:1.5;color:#c6d2e8}
+#chat{flex:1;min-height:220px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.bubble{white-space:pre-wrap;overflow-wrap:anywhere;padding:12px 14px;border-radius:14px;max-width:88%;line-height:1.45}
+.user{align-self:flex-end;background:#254a80}.assistant{align-self:flex-start;background:#1a2540;border:1px solid #303d5b}
+.composer{display:flex;gap:8px}textarea{flex:1;min-height:54px;resize:vertical;border:1px solid #3a4765;border-radius:12px;padding:12px;color:#fff;background:#111827;font:inherit}
+@media(max-width:560px){.composer{flex-direction:column}.bubble{max-width:96%}}
+</style></head>
 <body>
-<header>
-  <h1>Chromebook AI</h1>
-  <div id="status">Not loaded · Local model · WebGPU</div>
-</header>
+<header><h1>Chromebook AI</h1><div id="status">Not loaded · Local model · WebGPU</div></header>
 <main>
-  <div class="toolbar">
-    <button id="load">Load local AI</button>
-    <button id="clear">Clear conversation</button>
-    <button id="export">Export chat</button>
-  </div>
-  <div id="progress">First load downloads the model. Keep this tab open until initialization finishes.</div>
-  <section id="chat" aria-live="polite"></section>
-  <div class="composer">
-    <textarea id="prompt" placeholder="Message your local AI…" disabled></textarea>
-    <button id="send" disabled>Send</button>
-  </div>
-  <div class="note">Model: Qwen2.5-0.5B-Instruct-q4f16_1-MLC. Prompts are processed locally by WebLLM. Chat history is saved in this browser profile. The app shell and model cache use browser storage, which ChromeOS may clear under storage pressure or when site data is removed.</div>
+<div class="toolbar"><button id="load">Load local AI</button><button id="clear">Clear conversation</button><button id="export">Export chat</button></div>
+<section class="remote-panel">
+<h2>Remote Control Center</h2>
+<div class="remote-grid">
+<div class="remote-card"><h3>Control your Windows PC</h3><p>Connect from this Chromebook to a Windows, Mac, or Linux computer configured for Chrome Remote Desktop.</p><a class="btn" href="https://remotedesktop.google.com/access" target="_blank" rel="noopener">Open remote access</a></div>
+<div class="remote-card"><h3>Share this Chromebook</h3><p>Open Google's remote support page. Chromebook screen-sharing availability depends on ChromeOS and administrator policy.</p><a class="btn" href="https://remotedesktop.google.com/support" target="_blank" rel="noopener">Open remote support</a></div>
+<div class="remote-card"><h3>AI-assisted operation</h3><p>The local AI can prepare a step-by-step plan. This prototype cannot see or directly control the remote desktop session.</p><button id="remotePlan">Prepare a safe plan</button></div>
+</div>
+<div class="warning">Never share your Google password, remote-access PIN, or one-time support code with the AI or put them in chat. Approve remote access only for people and devices you trust.</div>
+<ol id="remoteSteps" hidden><li>Open the appropriate Google Remote Desktop page above.</li><li>Verify the computer name and Google account before connecting.</li><li>Enter your PIN only into Google's official Remote Desktop page.</li><li>For support sharing, verify the other person's identity and approve the share yourself.</li><li>Ask the AI for a plan before sensitive operations; execute each action yourself and disconnect when finished.</li></ol>
+</section>
+<div id="progress" class="muted">First load downloads the model. Keep this tab open until initialization finishes.</div>
+<section id="chat" aria-live="polite"></section>
+<div class="composer"><textarea id="prompt" placeholder="Message your local AI…" disabled></textarea><button id="send" disabled>Send</button></div>
+<div class="muted">Model: Qwen2.5-0.5B-Instruct-q4f16_1-MLC. Inference runs locally through WebLLM. Chat history is saved in this browser profile. Browser storage may be cleared by ChromeOS.</div>
 </main>
 <script type="module">
-  const MODEL = "Qwen2.5-0.5B-Instruct-q4f16_1-MLC";
-  const $ = id => document.getElementById(id);
-  const chatEl = $("chat");
-  const statusEl = $("status");
-  const progressEl = $("progress");
-  let engine = null;
-  let busy = false;
-  let messages = [];
-  try { messages = JSON.parse(localStorage.getItem("chromebook-ai-messages") || "[]"); } catch {}
-
-  function save() {
-    try { localStorage.setItem("chromebook-ai-messages", JSON.stringify(messages)); }
-    catch { progressEl.textContent = "Browser storage is full; conversation could not be saved."; }
-  }
-  function draw() {
-    chatEl.replaceChildren();
-    for (const m of messages) {
-      const div = document.createElement("div");
-      div.className = "bubble " + (m.role === "user" ? "user" : "assistant");
-      div.textContent = m.content;
-      chatEl.append(div);
-    }
-    chatEl.scrollTop = chatEl.scrollHeight;
-  }
-  function addMessage(role, content) {
-    messages.push({role, content});
-    save(); draw();
-  }
-  draw();
-
-  $("load").addEventListener("click", async () => {
-    if (engine || busy) return;
-    busy = true; $("load").disabled = true;
-    try {
-      if (!navigator.gpu) throw new Error("WebGPU is not available in this browser.");
-      statusEl.textContent = "Loading WebLLM…";
-      progressEl.textContent = "Preparing local inference engine…";
-      const { CreateMLCEngine } = await import("https://esm.run/@mlc-ai/web-llm");
-      engine = await CreateMLCEngine(MODEL, {
-        initProgressCallback: p => {
-          const pct = typeof p.progress === "number" ? ` ${Math.round(p.progress * 100)}%` : "";
-          progressEl.textContent = (p.text || "Loading model…") + pct;
-        }
-      });
-      statusEl.textContent = "Ready · Qwen 2.5 0.5B · Local inference";
-      progressEl.textContent = "Model loaded. Chat is ready.";
-      $("prompt").disabled = false;
-      $("send").disabled = false;
-      $("prompt").focus();
-    } catch (e) {
-      statusEl.textContent = "Model not loaded";
-      progressEl.textContent = "Error: " + (e?.message || String(e)) + " — Check internet, WebGPU, and available memory, then retry.";
-      $("load").disabled = false;
-    } finally { busy = false; }
-  });
-
-  async function send() {
-    const prompt = $("prompt").value.trim();
-    if (!prompt || !engine || busy) return;
-    $("prompt").value = "";
-    addMessage("user", prompt);
-    busy = true; $("send").disabled = true; $("prompt").disabled = true;
-    const history = messages.map(m => ({role:m.role, content:m.content}));
-    const reply = {role:"assistant", content:""};
-    messages.push(reply);
-    draw();
-    const bubble = chatEl.lastElementChild;
-    try {
-      const stream = await engine.chat.completions.create({
-        messages: [
-          {role:"system", content:"You are a helpful assistant running locally on a Chromebook. Be practical, clear, and honest about limitations."},
-          ...history
-        ],
-        temperature: 0.7,
-        max_tokens: 384,
-        stream: true
-      });
-      let answer = "";
-      for await (const chunk of stream) {
-        answer += chunk.choices?.[0]?.delta?.content || "";
-        bubble.textContent = answer;
-        chatEl.scrollTop = chatEl.scrollHeight;
-      }
-      reply.content = answer || "(No text returned.)";
-      save();
-    } catch (e) {
-      reply.content = "Generation error: " + (e?.message || String(e));
-      save(); draw();
-    } finally {
-      busy = false; $("send").disabled = false; $("prompt").disabled = false; $("prompt").focus();
-    }
-  }
-  $("send").addEventListener("click", send);
-  $("prompt").addEventListener("keydown", e => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
-  });
-  $("clear").addEventListener("click", () => {
-    if (!confirm("Clear this conversation from this browser?")) return;
-    messages = []; save(); draw();
-  });
-  $("export").addEventListener("click", () => {
-    const content = messages.map(m => `${m.role.toUpperCase()}\n${m.content}`).join("\n\n");
-    const blob = new Blob([content], {type:"text/plain"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "chromebook-ai-chat.txt"; a.click();
-    URL.revokeObjectURL(url);
-  });
-  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-    navigator.serviceWorker.register("./sw.js").catch(err => console.warn("Service worker registration failed", err));
-  }
-</script>
-</body>
-</html>
+const MODEL="Qwen2.5-0.5B-Instruct-q4f16_1-MLC", $=id=>document.getElementById(id);
+let engine=null,busy=false,messages=[];
+try{messages=JSON.parse(localStorage.getItem("chromebook-ai-messages")||"[]")}catch{}
+function save(){try{localStorage.setItem("chromebook-ai-messages",JSON.stringify(messages))}catch{$("progress").textContent="Browser storage is full; conversation could not be saved."}}
+function draw(){const el=$("chat");el.replaceChildren();for(const m of messages){const d=document.createElement("div");d.className="bubble "+(m.role==="user"?"user":"assistant");d.textContent=m.content;el.append(d)}el.scrollTop=el.scrollHeight}
+draw();
+$("remotePlan").onclick=()=>{$("remoteSteps").hidden=!$("remoteSteps").hidden;$("remotePlan").textContent=$("remoteSteps").hidden?"Prepare a safe plan":"Hide plan"};
+$("load").onclick=async()=>{if(engine||busy)return;busy=true;$("load").disabled=true;try{if(!navigator.gpu)throw Error("WebGPU is unavailable");$("status").textContent="Loading WebLLM…";const {CreateMLCEngine}=await import("https://esm.run/@mlc-ai/web-llm");engine=await CreateMLCEngine(MODEL,{initProgressCallback:p=>$("progress").textContent=(p.text||"Loading model…")+(typeof p.progress==="number"?" "+Math.round(p.progress*100)+"%":"")});$("status").textContent="Ready · Qwen 2.5 0.5B · Local inference";$("progress").textContent="Model loaded. Chat is ready.";$("prompt").disabled=false;$("send").disabled=false}catch(e){$("status").textContent="Model not loaded";$("progress").textContent="Error: "+(e.message||e);$("load").disabled=false}finally{busy=false}};
+async function send(){const text=$("prompt").value.trim();if(!text||!engine||busy)return;$("prompt").value="";messages.push({role:"user",content:text});const history=messages.map(m=>({...m}));messages.push({role:"assistant",content:""});draw();const bubble=$("chat").lastElementChild;busy=true;$("send").disabled=true;$("prompt").disabled=true;try{const stream=await engine.chat.completions.create({messages:[{role:"system",content:"You are a helpful assistant running locally on a Chromebook. Be practical, clear, and honest about limitations."},...history],temperature:.7,max_tokens:384,stream:true});let answer="";for await(const chunk of stream){answer+=chunk.choices?.[0]?.delta?.content||"";bubble.textContent=answer;$("chat").scrollTop=$("chat").scrollHeight}messages[messages.length-1].content=answer||"(No text returned.)";save()}catch(e){messages[messages.length-1].content="Generation error: "+(e.message||e);draw();save()}finally{busy=false;$("send").disabled=false;$("prompt").disabled=false;$("prompt").focus()}}
+$("send").onclick=send;$("prompt").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}};
+$("clear").onclick=()=>{if(confirm("Clear this conversation from this browser?")){messages=[];save();draw()}};
+$("export").onclick=()=>{const blob=new Blob([messages.map(m=>m.role.toUpperCase()+"\n"+m.content).join("\n\n")],{type:"text/plain"});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="chromebook-ai-chat.txt";a.click();URL.revokeObjectURL(url)};
+if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(console.warn);
+</script></body></html>
