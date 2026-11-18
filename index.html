@@ -15,6 +15,10 @@ button:disabled{opacity:.45}.toolbar,.remote-grid{display:flex;flex-wrap:wrap;ga
 .remote-panel h2{font-size:1.05rem;margin:0 0 10px}.remote-card{flex:1 1 220px;border:1px solid #303d5b;border-radius:12px;padding:12px;background:#17223a}
 .remote-card h3{font-size:.95rem;margin:0 0 6px}.remote-card p{color:#aab7d2;font-size:.82rem;line-height:1.4;margin:0 0 10px}
 .warning{color:#f2d59a;font-size:.8rem;line-height:1.45;margin-top:10px}
+.remote-frame-wrap{border:1px solid #303d5b;border-radius:12px;overflow:hidden;background:#0b1020}
+.remote-frame-bar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px;background:#17223a}
+.remote-frame{display:block;width:100%;height:min(72vh,760px);min-height:480px;border:0;background:#fff}
+#remoteFrameStatus{font-size:.8rem;color:#aab7d2}
 #remoteSteps{font-size:.83rem;line-height:1.5;color:#c6d2e8}
 #chat{flex:1;min-height:220px;overflow:auto;display:flex;flex-direction:column;gap:10px}
 .bubble{white-space:pre-wrap;overflow-wrap:anywhere;padding:12px 14px;border-radius:14px;max-width:88%;line-height:1.45}
@@ -27,14 +31,19 @@ button:disabled{opacity:.45}.toolbar,.remote-grid{display:flex;flex-wrap:wrap;ga
 <main>
 <div class="toolbar"><button id="load">Load local AI</button><button id="clear">Clear conversation</button><button id="export">Export chat</button></div>
 <section class="remote-panel">
-<h2>Remote Control Center</h2>
-<div class="remote-grid">
-<div class="remote-card"><h3>Control your Windows PC</h3><p>Connect from this Chromebook to a Windows, Mac, or Linux computer configured for Chrome Remote Desktop.</p><a class="btn" href="https://remotedesktop.google.com/access" target="_blank" rel="noopener">Open remote access</a></div>
-<div class="remote-card"><h3>Share this Chromebook</h3><p>Open Google's remote support page. Chromebook screen-sharing availability depends on ChromeOS and administrator policy.</p><a class="btn" href="https://remotedesktop.google.com/support" target="_blank" rel="noopener">Open remote support</a></div>
-<div class="remote-card"><h3>AI-assisted operation</h3><p>The local AI can prepare a step-by-step plan. This prototype cannot see or directly control the remote desktop session.</p><button id="remotePlan">Prepare a safe plan</button></div>
+<h2>DextraDesk — Remote PC</h2>
+<p class="muted">Connect to your Windows PC from inside Chromebook AI. Sign in to DextraDesk below.</p>
+<div class="remote-frame-wrap">
+  <div class="remote-frame-bar">
+    <span id="remoteFrameStatus">Loading DextraDesk in the embedded panel…</span>
+    <div class="toolbar">
+      <button id="reloadDextra">Reload panel</button>
+      <a class="btn" href="https://app.dextradesk.com/" target="_blank" rel="noopener">Open DextraDesk separately</a>
+    </div>
+  </div>
+  <iframe id="dextraFrame" class="remote-frame" src="https://app.dextradesk.com/" title="DextraDesk remote desktop" allow="autoplay; fullscreen; clipboard-read; clipboard-write; gamepad" allowfullscreen></iframe>
 </div>
-<div class="warning">Never share your Google password, remote-access PIN, or one-time support code with the AI or put them in chat. Approve remote access only for people and devices you trust.</div>
-<ol id="remoteSteps" hidden><li>Open the appropriate Google Remote Desktop page above.</li><li>Verify the computer name and Google account before connecting.</li><li>Enter your PIN only into Google's official Remote Desktop page.</li><li>For support sharing, verify the other person's identity and approve the share yourself.</li><li>Ask the AI for a plan before sensitive operations; execute each action yourself and disconnect when finished.</li></ol>
+<div class="warning">Embedding is attempted here, but DextraDesk may block being displayed inside another website through its security headers or sign-in flow. If the panel stays blank or reports that it refused to connect, its provider does not permit this kind of embedding; the separate-site link is only a fallback, not an embedded connection. Never give remote access to anyone you do not trust. Keep your Windows PC secure and approve pairing only on the PC itself.</div>
 </section>
 <div id="progress" class="muted">First load downloads the model. Keep this tab open until initialization finishes.</div>
 <section id="chat" aria-live="polite"></section>
@@ -48,7 +57,8 @@ try{messages=JSON.parse(localStorage.getItem("chromebook-ai-messages")||"[]")}ca
 function save(){try{localStorage.setItem("chromebook-ai-messages",JSON.stringify(messages))}catch{$("progress").textContent="Browser storage is full; conversation could not be saved."}}
 function draw(){const el=$("chat");el.replaceChildren();for(const m of messages){const d=document.createElement("div");d.className="bubble "+(m.role==="user"?"user":"assistant");d.textContent=m.content;el.append(d)}el.scrollTop=el.scrollHeight}
 draw();
-$("remotePlan").onclick=()=>{$("remoteSteps").hidden=!$("remoteSteps").hidden;$("remotePlan").textContent=$("remoteSteps").hidden?"Prepare a safe plan":"Hide plan"};
+$("reloadDextra").onclick=()=>{$("remoteFrameStatus").textContent="Reloading DextraDesk…";$("dextraFrame").src="https://app.dextradesk.com/"};
+$("dextraFrame").addEventListener("load",()=>{$("remoteFrameStatus").textContent="DextraDesk page loaded. If the panel is blank or sign-in fails, embedding may be blocked by DextraDesk."});
 $("load").onclick=async()=>{if(engine||busy)return;busy=true;$("load").disabled=true;try{if(!navigator.gpu)throw Error("WebGPU is unavailable");$("status").textContent="Loading WebLLM…";const {CreateMLCEngine}=await import("https://esm.run/@mlc-ai/web-llm");engine=await CreateMLCEngine(MODEL,{initProgressCallback:p=>$("progress").textContent=(p.text||"Loading model…")+(typeof p.progress==="number"?" "+Math.round(p.progress*100)+"%":"")});$("status").textContent="Ready · Qwen 2.5 0.5B · Local inference";$("progress").textContent="Model loaded. Chat is ready.";$("prompt").disabled=false;$("send").disabled=false}catch(e){$("status").textContent="Model not loaded";$("progress").textContent="Error: "+(e.message||e);$("load").disabled=false}finally{busy=false}};
 async function send(){const text=$("prompt").value.trim();if(!text||!engine||busy)return;$("prompt").value="";messages.push({role:"user",content:text});const history=messages.map(m=>({...m}));messages.push({role:"assistant",content:""});draw();const bubble=$("chat").lastElementChild;busy=true;$("send").disabled=true;$("prompt").disabled=true;try{const stream=await engine.chat.completions.create({messages:[{role:"system",content:"You are a helpful assistant running locally on a Chromebook. Be practical, clear, and honest about limitations."},...history],temperature:.7,max_tokens:384,stream:true});let answer="";for await(const chunk of stream){answer+=chunk.choices?.[0]?.delta?.content||"";bubble.textContent=answer;$("chat").scrollTop=$("chat").scrollHeight}messages[messages.length-1].content=answer||"(No text returned.)";save()}catch(e){messages[messages.length-1].content="Generation error: "+(e.message||e);draw();save()}finally{busy=false;$("send").disabled=false;$("prompt").disabled=false;$("prompt").focus()}}
 $("send").onclick=send;$("prompt").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}};
