@@ -78,3 +78,12 @@ The ATLAS Web tab remains an embedded viewer using Chrome's browser engine. It c
 
 TEST STATUS
 The files and scripts were edited locally and JavaScript syntax is checked. The Cloudflare deployment and Chromebook runtime have not been tested from this environment. BrowserPod runtime still requires an internet connection for its first load.
+
+
+CLOUDFLARE WORKERS CONFIGURATION
+This package includes wrangler.jsonc at the project root.
+Cloudflare Workers Builds should use:
+- Root directory: /
+- Build command: (leave empty)
+- Deploy command: npx wrangler deploy
+The Wrangler configuration publishes the repository-root static assets and allows _headers to apply to /browserpod.html.
