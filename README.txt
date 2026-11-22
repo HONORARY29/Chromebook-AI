@@ -87,3 +87,6 @@ Cloudflare Workers Builds should use:
 - Build command: (leave empty)
 - Deploy command: npx wrangler deploy
 The Wrangler configuration publishes the repository-root static assets and allows _headers to apply to /browserpod.html.
+
+
+UPDATE: The ATLAS Web Browser tab and its embedded browsing interface have been removed. AI Chat, Remote Desktop, BrowserPod (the isolated local terminal), JSFiddle, and Compatibility remain. The separate browserpod.html page and its isolation headers are intentionally retained.
