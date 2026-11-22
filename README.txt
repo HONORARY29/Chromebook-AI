@@ -1,38 +1,30 @@
-CHROMEBOOK AI V1 — DEXTRADESK + BROWSER LINUX VM BUILD
+CHROMEBOOK AI — LEFT-NAV DASHBOARD BUILD
 
 Files: index.html, manifest.webmanifest, sw.js, README.txt.
 
-Features:
-- Local WebLLM chat configured for Qwen2.5-0.5B-Instruct-q4f16_1-MLC.
-- Browser-local conversation history, export and clear controls.
-- PWA manifest and service-worker app-shell caching.
-- DextraDesk remote PC panel embedded at https://app.dextradesk.com/.
-- New Browser Linux VM panel embedding LinuxOnTab's Alpine Linux environment.
+Dashboard navigation (left sidebar on desktop; horizontal tabs on small screens):
+- AI Chat: local WebLLM chat configured for Qwen2.5-0.5B-Instruct-q4f16_1-MLC; browser-local conversation history, export and clear.
+- Remote Desktop: DextraDesk embedded at https://app.dextradesk.com/ with reload and separate-page fallback.
+- Linux VM: LinuxOnTab embedded in the page, with reload and separate-page fallback.
+- JSFiddle: attempts to embed https://jsfiddle.net/ with a separate-page fallback. JSFiddle may block full-editor iframe embedding; this is controlled by JSFiddle's response/security policy. Includes a small local sandboxed JavaScript scratchpad as a fallback, not a replacement for the JSFiddle service.
+- Compatibility: a built-in test runs in the actual Chromebook AI website context and reports SharedArrayBuffer, cross-origin isolation, Service Worker, secure context, and WebGPU.
 
-VM design and important boundaries:
-- LinuxOnTab describes its environment as a browser-side Linux system running in WebAssembly, with an Alpine Linux userland. It says computation runs in the browser tab and VM data/snapshots are stored in IndexedDB.
-- This is not ChromeOS Linux development environment, not a Windows-hosted VM, and not a cloud compute instance.
-- First load requires internet. LinuxOnTab says its page and VM image can be cached for offline boot, but offline operation has NOT been tested on this Chromebook.
-- The embedded panel uses LinuxOnTab's shell page. Third-party iframe embedding may be blocked by provider/browser policy; if it fails, use the separate-page link or report the exact error.
-- v86's published compatibility notes state that normal 64-bit Linux kernels are not supported; Alpine Linux is supported.
-- Keep the VM lightweight. Running it at the same time as the local WebLLM model may consume substantial RAM on an 8 GB Chromebook. Close or stop one when using the other if performance suffers.
-- The VM is not automatically connected to the Chromebook AI. The AI cannot inspect the VM terminal or run commands in it in this build.
-- Do not enter passwords, API keys, or sensitive files into a third-party environment unless you understand its storage and security model.
+Important technical notes:
+- SharedArrayBuffer commonly requires cross-origin isolation, usually configured by COOP and COEP response headers. Standard GitHub Pages does not provide arbitrary custom response-header configuration. If the test reports false, that is a website-context result; it does not prove the Chromebook hardware lacks the capability.
+- JSFiddle's full editor may refuse iframe embedding. Use its separate-page link if the panel is blank or blocked.
+- DextraDesk and LinuxOnTab are third-party embedded sites. Their iframe policies, sign-in, and features are controlled by those providers.
+- The VM is a browser-side Linux environment, not a cloud compute VM. It is not automatically connected to the local AI.
+- On an 8 GB Chromebook, running the VM and local model simultaneously may cause memory pressure. Close or stop one if performance degrades.
+- The JS scratchpad runs user-entered code in a sandboxed iframe. Do not use it for secrets or untrusted code.
 
 Deployment:
 1. Extract this ZIP.
 2. Open chromebook_ai_v1.
-3. Upload all four files to the root of your GitHub Pages repository, replacing the existing versions.
+3. Upload all four files to the root of the GitHub Pages repository, replacing the existing versions.
 4. Wait for GitHub Pages to redeploy.
-5. Reopen/refresh the Chromebook AI website. If the old version remains, close the installed PWA and reopen it.
-6. Scroll to Browser Linux VM — Alpine and wait for the VM page to load and boot.
+5. Refresh the website. If an old version persists, close and reopen the installed PWA or clear its site cache.
 
-Sources:
-- v86 project and compatibility: https://github.com/copy/v86
-- LinuxOnTab product, offline/storage and embed parameters: https://linuxontab.com/
-- LinuxOnTab shell: https://linuxontab.com/shell/?pip=1&piph=400&pipw=600&pipx=20&pipy=50
-
-Verification status:
-- The ZIP and HTML integration were created and checked locally.
-- This build has NOT been tested on the user's Chromebook.
-- The embedded Linux VM boot, iframe permission, offline caching and persistence must be confirmed on the Chromebook.
+Verification:
+- Files were created and checked locally for expected sections and controls.
+- This build has NOT been tested on the Chromebook.
+- Confirm each tab, DextraDesk, LinuxOnTab, JSFiddle embedding, local model loading, and compatibility output on the actual device.
