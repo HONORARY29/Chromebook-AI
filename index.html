@@ -102,15 +102,23 @@ const vmUrl="https://linuxontab.com/shell/?pip=1&piph=400&pipw=600&pipx=20&pipy=
 $("reloadVm").onclick=()=>{$("vmFrameStatus").textContent="Reloading Linux environment…";$("linuxVmFrame").src=vmUrl};
 $("linuxVmFrame").addEventListener("load",()=>{$("vmFrameStatus").textContent="LinuxOnTab page loaded. Wait for the VM to boot."});
 $("reloadFiddle").onclick=()=>{$("jsfiddleFrame").src="https://jsfiddle.net/"};
-function runCompatibility(){const tests=[
-  ["SharedArrayBuffer",typeof SharedArrayBuffer!=="undefined","Required by some threaded WebAssembly runtimes"],
-  ["Cross-origin isolated",window.crossOriginIsolated===true,"Usually requires COOP and COEP response headers"],
-  ["Service Worker","serviceWorker" in navigator,"Required for PWA/offline features"],
-  ["Secure context",window.isSecureContext===true,"HTTPS or localhost is required for many browser APIs"],
-  ["WebGPU",!!navigator.gpu,"Used by the local WebLLM model"]
-];
-const wrap=$("compatResults");wrap.replaceChildren();for(const [name,ok,detail] of tests){const card=document.createElement("div");card.className="test-item";const n=document.createElement("div");n.className="name";n.textContent=name;const v=document.createElement("div");v.className="value "+(ok?"good":"bad");v.textContent=ok?"Supported":"Unavailable";const d=document.createElement("div");d.className="name";d.style.marginTop="6px";d.textContent=detail;card.append(n,v,d);wrap.append(card)}
-const missing=tests.filter(t=>!t[1]).map(t=>t[0]);$("compatSummary").textContent=missing.length?"Unavailable on this website: "+missing.join(", ")+". This is a website/browser-context result, not proof that the Chromebook hardware lacks the feature.":"All tested browser features are available in this website context.";
+async function runCompatibility(){
+  const tests=[
+    {name:"SharedArrayBuffer",ok:typeof SharedArrayBuffer!=="undefined",detail:"Needed by some threaded WebAssembly runtimes."},
+    {name:"Cross-origin isolated",ok:window.crossOriginIsolated===true,detail:"Normally requires COOP: same-origin and COEP: credentialless or require-corp."},
+    {name:"Service Worker API",ok:"serviceWorker" in navigator,detail:"Checks whether this page can access the Service Worker API."},
+    {name:"Secure context",ok:window.isSecureContext===true,detail:"HTTPS or localhost is required for many browser APIs."},
+    {name:"WebGPU",ok:!!navigator.gpu,detail:"Used by the local WebLLM model."}
+  ];
+  let swDetail="Service Worker registration not attempted.";
+  if("serviceWorker" in navigator){
+    try{const reg=await navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"});await navigator.serviceWorker.ready;swDetail="Registration succeeded (scope: "+reg.scope+").";}
+    catch(e){swDetail="Registration failed: "+(e.name||"Error")+" — "+(e.message||String(e));}
+  }else{swDetail="The browser does not expose navigator.serviceWorker on this page.";}
+  tests.push({name:"Service Worker registration",ok:swDetail.startsWith("Registration succeeded"),detail:swDetail});
+  const wrap=$("compatResults");wrap.replaceChildren();
+  for(const t of tests){const card=document.createElement("div");card.className="test-item";const n=document.createElement("div");n.className="name";n.textContent=t.name;const v=document.createElement("div");v.className="value "+(t.ok?"good":"bad");v.textContent=t.ok?"Supported":"Unavailable";const d=document.createElement("div");d.className="name";d.style.marginTop="6px";d.textContent=t.detail;card.append(n,v,d);wrap.append(card)}
+  const missing=tests.filter(t=>!t.ok).map(t=>t.name);$("compatSummary").textContent=missing.length?"Unavailable or failing on this website: "+missing.join(", ")+". These are results from this website/browser context, not proof that the Chromebook hardware lacks support.":"All tested browser features are available and the service worker registered successfully.";
 }
 $("runCompat").onclick=runCompatibility;
 const defaultScratch=`document.body.innerText = JSON.stringify({\n  sharedArrayBuffer: typeof SharedArrayBuffer !== "undefined",\n  crossOriginIsolated: window.crossOriginIsolated,\n  serviceWorker: "serviceWorker" in navigator,\n  secureContext: window.isSecureContext\n}, null, 2);`;

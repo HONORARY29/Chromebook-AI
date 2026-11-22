@@ -1,30 +1,40 @@
-CHROMEBOOK AI — LEFT-NAV DASHBOARD BUILD
+CHROMEBOOK AI — CLOUDFLARE PAGES BUILD
 
-Files: index.html, manifest.webmanifest, sw.js, README.txt.
+This package preserves the existing five-tab dashboard:
+- AI Chat: local WebLLM/Qwen 2.5 0.5B interface and browser-local conversation history.
+- Remote Desktop: DextraDesk embed with a separate-tab fallback.
+- Linux VM: LinuxOnTab embed with a separate-tab fallback.
+- JSFiddle: embedded editor attempt, separate-tab fallback, and local sandboxed JS scratchpad.
+- Compatibility: tests SharedArrayBuffer, cross-origin isolation, WebGPU, secure context, Service Worker API availability, and actual Service Worker registration.
 
-Dashboard navigation (left sidebar on desktop; horizontal tabs on small screens):
-- AI Chat: local WebLLM chat configured for Qwen2.5-0.5B-Instruct-q4f16_1-MLC; browser-local conversation history, export and clear.
-- Remote Desktop: DextraDesk embedded at https://app.dextradesk.com/ with reload and separate-page fallback.
-- Linux VM: LinuxOnTab embedded in the page, with reload and separate-page fallback.
-- JSFiddle: attempts to embed https://jsfiddle.net/ with a separate-page fallback. JSFiddle may block full-editor iframe embedding; this is controlled by JSFiddle's response/security policy. Includes a small local sandboxed JavaScript scratchpad as a fallback, not a replacement for the JSFiddle service.
-- Compatibility: a built-in test runs in the actual Chromebook AI website context and reports SharedArrayBuffer, cross-origin isolation, Service Worker, secure context, and WebGPU.
+IMPORTANT: This package includes a Cloudflare Pages `_headers` file. GitHub Pages will ignore it. Deploy this build to Cloudflare Pages to apply the response headers. Keep the GitHub repository as your source/backup; do not delete your existing GitHub Pages site until the Cloudflare deployment is verified.
 
-Important technical notes:
-- SharedArrayBuffer commonly requires cross-origin isolation, usually configured by COOP and COEP response headers. Standard GitHub Pages does not provide arbitrary custom response-header configuration. If the test reports false, that is a website-context result; it does not prove the Chromebook hardware lacks the capability.
-- JSFiddle's full editor may refuse iframe embedding. Use its separate-page link if the panel is blank or blocked.
-- DextraDesk and LinuxOnTab are third-party embedded sites. Their iframe policies, sign-in, and features are controlled by those providers.
-- The VM is a browser-side Linux environment, not a cloud compute VM. It is not automatically connected to the local AI.
-- On an 8 GB Chromebook, running the VM and local model simultaneously may cause memory pressure. Close or stop one if performance degrades.
-- The JS scratchpad runs user-entered code in a sandboxed iframe. Do not use it for secrets or untrusted code.
+CLOUDFLARE PAGES DEPLOYMENT (Git integration)
+1. Extract the ZIP.
+2. In the `chromebook_ai_v1` folder, select ALL files, including the extensionless `_headers` file.
+3. Upload/commit those files to the ROOT of the GitHub repository that contains your Chromebook AI website. Do not put them in a nested folder. This adds `_headers` alongside index.html, manifest.webmanifest, and sw.js.
+4. Sign in to Cloudflare and open Workers & Pages -> Create -> Pages -> Connect to Git.
+5. Choose the same GitHub repository and authorize access if prompted.
+6. For build settings, choose no framework / None. Leave Build command empty. Set Build output directory to `.` (the repository root, where index.html and _headers are located). If Cloudflare asks for a root directory, leave it at `/` or the repository root.
+7. Deploy. Cloudflare will provide a `*.pages.dev` URL. Open that URL on the Chromebook.
+8. Open Compatibility and tap Run compatibility test. Check whether SharedArrayBuffer and Cross-origin isolated become Supported. Also check whether Service Worker registration succeeds.
+9. Test DextraDesk login/connection, LinuxOnTab, JSFiddle, local AI model loading, and chat history on the Cloudflare URL before changing your usual bookmark/PWA shortcut.
 
-Deployment:
-1. Extract this ZIP.
-2. Open chromebook_ai_v1.
-3. Upload all four files to the root of the GitHub Pages repository, replacing the existing versions.
-4. Wait for GitHub Pages to redeploy.
-5. Refresh the website. If an old version persists, close and reopen the installed PWA or clear its site cache.
+HEADERS INCLUDED
+- Cross-Origin-Opener-Policy: same-origin
+- Cross-Origin-Embedder-Policy: credentialless
+- Permissions-Policy: cross-origin-isolated=(self)
 
-Verification:
-- Files were created and checked locally for expected sections and controls.
-- This build has NOT been tested on the Chromebook.
-- Confirm each tab, DextraDesk, LinuxOnTab, JSFiddle embedding, local model loading, and compatibility output on the actual device.
+The `credentialless` COEP mode is chosen as a less restrictive starting point for cross-origin embeds than `require-corp`, but third-party sign-in/session behavior can still change. DextraDesk and JSFiddle may not work inside the iframe after isolation is enabled. Their separate-tab links remain available. If DextraDesk authentication stops working in the embed, use its separate-tab fallback; do not weaken security headers without testing.
+
+LIMITATIONS / HONEST STATUS
+- The headers are configured in this package but have NOT been deployed or tested on Cloudflare from this session.
+- Cloudflare Pages applies `_headers` to static asset responses. This static site has no Pages Functions.
+- Cross-origin isolation may enable SharedArrayBuffer, but it does not guarantee LinuxOnTab will run. LinuxOnTab has additional browser, WebAssembly, worker, and networking requirements.
+- A false Service Worker registration result may indicate a browser policy, scope, or deployment issue; headers alone do not guarantee registration.
+- This is not a cloud VM. LinuxOnTab is a browser-hosted environment and is not connected to the local AI.
+- On the Acer Chromebook 311 C723 with 8 GB RAM, running the model and VM together may cause memory pressure.
+- First model load still imports WebLLM from esm.run and downloads model artifacts; fully offline inference startup is not yet verified.
+
+ROLLBACK
+Keep the original GitHub Pages deployment and repository history. If the Cloudflare version breaks an integration, continue using the original GitHub Pages URL while we adjust the headers or embeds.
