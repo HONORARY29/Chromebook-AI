@@ -56,3 +56,25 @@ DEPLOY THIS UPDATE
 
 
 Remote Desktop update: Restores the original embedded DextraDesk panel with Reload panel and Open separately fallback. DextraDesk may still refuse iframe embedding through its own security policy.
+
+ATLAS UPDATE: ISOLATED BROWSERPOD + WEB BROWSER IMPROVEMENTS
+- BrowserPod now runs on a dedicated /browserpod.html page opened in a separate tab.
+- The _headers file applies COOP: same-origin and COEP: require-corp ONLY to /browserpod.html. The main ATLAS page does not receive these headers, protecting third-party embeds from the cross-origin isolation trade-off.
+- BrowserPod startup now follows the official simple flow: import BrowserPod, BrowserPod.boot({storageKey}), createDefaultTerminal, then run bash. Removed the custom createFetchNetwork setup that could cause integration-specific failures.
+- ATLAS Web now supports address/search input (plain text searches Google), Back/Forward for its own navigation history, Reload, Home, bookmarks stored in localStorage, shortcut links, and an Open in new tab fallback. It is still an iframe-based viewer, not a full browser engine; sites may block embedding and should be opened in a real browser tab.
+
+DEPLOY
+1. Upload ALL files in this folder to the ROOT of the GitHub repository connected to Cloudflare, including the new browserpod.html and _headers.
+2. Commit the changes and wait for the Cloudflare deployment to show Ready.
+3. Open the main ATLAS page. Its Compatibility test may show SharedArrayBuffer and cross-origin isolation as unavailable; this is intentional because the main dashboard is not isolated.
+4. Open BrowserPod from the left sidebar, then choose Open isolated BrowserPod. On that new tab, the dedicated page should report Cross-origin isolated and SharedArrayBuffer available.
+5. Press Start BrowserPod.
+
+CLOUDFLARE NOTE
+The project is deployed as a Cloudflare Worker serving static assets (*.workers.dev). Cloudflare Workers static assets support the _headers file. The rule above is scoped to /browserpod.html only. If this deployment uses a Worker script that generates HTML responses rather than static assets, _headers will not affect generated responses; in that case the script must attach the headers directly to the browserpod.html response. See Cloudflare Workers static-assets Headers documentation.
+
+BROWSER LIMITATION
+The ATLAS Web tab remains an embedded viewer using Chrome's browser engine. It cannot turn a website into Firefox, bypass a site's X-Frame-Options/CSP frame-ancestors policy, or provide unrestricted browser tabs. Use Open in new tab for sites that block embedding.
+
+TEST STATUS
+The files and scripts were edited locally and JavaScript syntax is checked. The Cloudflare deployment and Chromebook runtime have not been tested from this environment. BrowserPod runtime still requires an internet connection for its first load.

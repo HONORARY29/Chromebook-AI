@@ -1,0 +1,6 @@
+# Only the dedicated BrowserPod page receives cross-origin isolation.
+# The main ATLAS dashboard and its embedded third-party pages remain unaffected.
+/browserpod.html
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Permissions-Policy: cross-origin-isolated=(self)

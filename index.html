@@ -57,41 +57,40 @@ body{margin:0;background:#0b1020;color:#edf2ff;min-height:100vh}button,a.btn{fon
   </section>
 
   <section class="view" id="browserView">
-    <div class="panel"><h3>Web Browser</h3><p class="muted">Browse websites inside Chromebook AI when they allow embedding. Some sites block display inside another website; use Open separately for those pages.</p>
-      <form id="browserForm" class="toolbar" style="margin:12px 0" autocomplete="off">
-        <input id="browserAddress" type="text" inputmode="url" value="https://example.com/" aria-label="Website address" placeholder="Enter a website address" style="flex:1;min-width:180px;background:#080d18;color:#fff;border:1px solid #3a4765;border-radius:10px;padding:11px;font:inherit">
-        <button type="submit">Go</button>
-        <button type="button" id="browserReload">Reload</button>
-        <a class="btn" id="browserOpenSeparate" href="https://example.com/" target="_blank" rel="noopener noreferrer">Open separately</a>
+    <div class="panel" style="text-align:center;padding:24px 18px 18px">
+      <div style="font-size:2rem;font-weight:800;letter-spacing:.08em;color:#a4dfc6;margin:4px 0 14px">ATLAS WEB</div>
+      <form id="browserForm" class="toolbar" style="max-width:850px;margin:0 auto 16px" autocomplete="off">
+        <input id="browserAddress" type="text" inputmode="url" value="https://www.google.com/" aria-label="Search or enter URL" placeholder="Search the web or enter a URL" style="flex:1;min-width:180px;background:#080d18;color:#fff;border:1px solid #7bc9a5;border-radius:24px;padding:14px 18px;font:inherit">
+        <button type="submit">Search / Go</button>
+        <a class="btn" id="browserOpenSeparate" href="https://www.google.com/" target="_blank" rel="noopener noreferrer">Open in new tab</a>
       </form>
-      <div class="toolbar" style="margin-bottom:10px">
+      <div class="toolbar" style="justify-content:center;margin-bottom:14px">
+        <button type="button" id="browserBack">← Back</button><button type="button" id="browserForward">Forward →</button><button type="button" id="browserReload">↻ Reload</button><button type="button" id="browserHome">Home</button><button type="button" id="browserBookmark">☆ Bookmark</button>
+      </div>
+      <div class="toolbar" style="justify-content:center;margin-bottom:12px">
         <button type="button" data-browser-url="https://www.google.com/">Google</button>
         <button type="button" data-browser-url="https://www.wikipedia.org/">Wikipedia</button>
-        <button type="button" data-browser-url="https://example.com/">Example</button>
+        <button type="button" data-browser-url="https://www.youtube.com/">YouTube</button>
+        <button type="button" data-browser-url="https://www.reddit.com/">Reddit</button>
+        <button type="button" data-browser-url="https://www.mozilla.org/firefox/">Firefox</button>
       </div>
-      <div class="frame-wrap"><div class="frame-bar"><span id="browserStatus" class="frame-status">Ready · enter a website address</span></div>
-        <iframe id="webBrowserFrame" class="browser-frame" src="https://example.com/" title="In-app web browser" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
+      <div id="browserBookmarks" class="toolbar" style="justify-content:center;margin-bottom:12px"></div>
+      <div class="frame-wrap" style="text-align:left"><div class="frame-bar"><span id="browserStatus" class="frame-status">ATLAS Web is ready · some sites may block embedded viewing</span><button type="button" id="browserNewTab">＋ New tab</button></div>
+        <div id="browserTabStrip" class="toolbar" style="padding:8px;background:#111827"></div>
+        <iframe id="webBrowserFrame" class="browser-frame" src="https://www.google.com/" title="ATLAS embedded web viewer" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
       </div>
-      <p class="warning">This is an embedded web viewer, not a full standalone browser. Websites can refuse to load in an embedded frame for security reasons. The Open separately link is provided for those sites. Do not enter passwords or sensitive information into unfamiliar websites.</p>
+      <p class="warning" style="text-align:left">ATLAS Web is a browser workspace, not a separate Firefox installation. Sites may refuse iframe embedding for security reasons. Use Open in new tab for those sites; no website can override another site's frame restrictions.</p>
     </div>
   </section>
-
   <section class="view" id="podView">
     <div class="panel">
-      <h3>BrowserPod · Local Linux workspace</h3>
-      <p class="muted">Start a Linux-like WebAssembly environment in this browser tab. It runs on this Chromebook, not on your Windows PC. No BrowserPod account or API key is needed for the basic local pod.</p>
-      <div class="toolbar" style="margin:12px 0">
-        <button id="bootPod">Start BrowserPod</button>
-        
-        <span id="podStatus" class="frame-status">Not started</span>
-      </div>
-      <div id="podConsole" style="min-height:360px;background:#080d18;border:1px solid #3a4765;border-radius:10px;padding:8px;overflow:auto"></div>
-      <p class="muted">Includes Bash, Node.js 22, npm, pnpm, git and common command-line tools. Python is currently preview-only and may have limitations. The basic pod uses browser fetch networking, so internet access from programs is subject to CORS. BrowserPod Edge is optional and is not configured here.</p>
-      <p class="muted"><a href="https://browserpod.io" target="_blank" rel="noopener noreferrer">Powered by BrowserPod</a> · <a href="https://browserpod.io/docs/overview" target="_blank" rel="noopener noreferrer">Documentation</a></p>
-      <p class="warning">BrowserPod requires this website to be cross-origin isolated (SharedArrayBuffer available). If startup reports that requirement is missing, check the Compatibility tab. The first boot downloads runtime components. Keep the tab open while it starts.</p>
+      <h3>BrowserPod · Dedicated local workspace</h3>
+      <p class="muted">BrowserPod now opens in its own isolated tab. This keeps the main ATLAS dashboard and its embedded websites separate from the special security headers BrowserPod needs.</p>
+      <div class="toolbar" style="margin:16px 0"><a class="btn" href="./browserpod.html" target="_blank" rel="noopener noreferrer">Open isolated BrowserPod ↗</a><span class="frame-status">No account or API key needed for local browser networking</span></div>
+      <p class="muted">The separate page uses the official BrowserPod package and the documented COOP/COEP setup. It includes a local terminal, persistent pod storage, and a built-in isolation check.</p>
+      <p class="warning">BrowserPod requires its own page to be cross-origin isolated. If the dedicated page still reports isolation unavailable, check the deployment's /browserpod.html response headers—not the main ATLAS page.</p>
     </div>
   </section>
-
   <section class="view" id="jsfiddleView">
     <div class="panel"><h3>JSFiddle</h3><p class="muted">JSFiddle is shown below if its site permits embedding. You can also open it directly in another tab.</p>
       <div class="toolbar" style="margin-bottom:10px"><a class="btn" href="https://jsfiddle.net/" target="_blank" rel="noopener">Open JSFiddle separately</a><button id="reloadFiddle">Reload JSFiddle panel</button></div>
@@ -130,45 +129,29 @@ function save(){try{localStorage.setItem("chromebook-ai-messages",JSON.stringify
 function draw(){const el=$("chat");el.replaceChildren();for(const m of messages){const d=document.createElement("div");d.className="bubble "+(m.role==="user"?"user":"assistant");d.textContent=m.content;el.append(d)}el.scrollTop=el.scrollHeight}
 draw();
 function normalizeBrowserUrl(raw){
-  let value=raw.trim();
-  if(!value)throw new Error("Enter a website address.");
-  if(!/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(value))value="https://"+value;
-  const url=new URL(value);
-  if(url.protocol!=="https:"&&url.protocol!=="http:")throw new Error("Only http:// and https:// website addresses are allowed.");
-  return url.href;
-}
-function navigateBrowser(raw){
-  try{const url=normalizeBrowserUrl(raw);$("browserAddress").value=url;$("browserOpenSeparate").href=url;$("browserStatus").textContent="Loading "+url;$("webBrowserFrame").src=url;}
-  catch(e){$("browserStatus").textContent=e.message;}
-}
-$("browserForm").addEventListener("submit",e=>{e.preventDefault();navigateBrowser($("browserAddress").value)});
-$("browserReload").onclick=()=>navigateBrowser($("browserAddress").value);
-document.querySelectorAll("[data-browser-url]").forEach(b=>b.addEventListener("click",()=>navigateBrowser(b.dataset.browserUrl)));
-$("webBrowserFrame").addEventListener("load",()=>{$("browserStatus").textContent="Page load event received. If the page is blank or blocked, use Open separately."});
-$("reloadFiddle").onclick=()=>{$("jsfiddleFrame").src="https://jsfiddle.net/"};
-let browserPod=null,browserPodTerminal=null,browserPodBooting=false;
-$("bootPod").onclick=async()=>{
-  if(browserPod||browserPodBooting)return;
-  if(!window.crossOriginIsolated||typeof SharedArrayBuffer==="undefined"){
-    $("podStatus").textContent="Blocked: cross-origin isolation is unavailable";
-    $("podConsole").textContent="BrowserPod needs SharedArrayBuffer. Open Compatibility and confirm Cross-origin isolated and SharedArrayBuffer are Supported.";
-    return;
+  let value=raw.trim();if(!value)throw new Error("Enter a website address or search phrase.");
+  if(!/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(value)){
+    if(value.includes(".")&&!value.includes(" "))value="https://"+value;
+    else value="https://www.google.com/search?q="+encodeURIComponent(value);
   }
-  browserPodBooting=true;$("bootPod").disabled=true;$("podStatus").textContent="Loading BrowserPod runtime…";$("podConsole").textContent="Downloading BrowserPod runtime and starting the local pod. This may take a little while on first launch.";
-  try{
-    const {BrowserPod}=await import("https://esm.sh/@leaningtech/browserpod@4.1.0");
-    const network=await BrowserPod.createFetchNetwork({fetch:BrowserPod.opinionatedFetch});
-    browserPod=await BrowserPod.boot({network,storageKey:"atlas-browserpod-v1"});
-    $("podConsole").replaceChildren();
-    browserPodTerminal=await browserPod.createDefaultTerminal($("podConsole"));
-    $("podStatus").textContent="Running locally · BrowserPod";
-    await browserPod.run("bash",[],{terminal:browserPodTerminal});
-  }catch(e){
-    $("podStatus").textContent="Startup failed";
-    $("podConsole").textContent="BrowserPod could not start: "+(e?.message||String(e))+"\n\nCheck cross-origin isolation, browser compatibility, and network access. You can also open BrowserPod's official demo from its documentation.";
-    browserPod=null;$("bootPod").disabled=false;
-  }finally{browserPodBooting=false;}
-};
+  const url=new URL(value);if(url.protocol!=="https:"&&url.protocol!=="http:")throw new Error("Only http:// and https:// addresses are allowed.");return url.href;
+}
+let browserHistory=[],browserIndex=-1,browserBookmarks=[];
+try{browserBookmarks=JSON.parse(localStorage.getItem("atlas-browser-bookmarks")||"[]")}catch{}
+function paintBookmarks(){const box=$("browserBookmarks");box.replaceChildren();browserBookmarks.forEach((url,i)=>{const b=document.createElement("button");b.textContent=new URL(url).hostname+" ×";b.title="Open bookmark (hold label to remove is not supported; use Remove below)";b.onclick=()=>navigateBrowser(url);box.append(b);});}
+function paintBrowserTabs(){const strip=$("browserTabStrip");if(!strip)return;strip.replaceChildren();const b=document.createElement("button");b.textContent="Tab 1 · "+(browserHistory[browserIndex]||"Start page").replace(/^https?:\/\//,"").slice(0,28);b.disabled=true;strip.append(b);}
+function navigateBrowser(raw,add=true){try{const url=normalizeBrowserUrl(raw);$("browserAddress").value=url;$("browserOpenSeparate").href=url;$("browserStatus").textContent="Opening "+url;if(add){browserHistory=browserHistory.slice(0,browserIndex+1);browserHistory.push(url);browserIndex=browserHistory.length-1;}$("webBrowserFrame").src=url;paintBrowserTabs();}catch(e){$("browserStatus").textContent=e.message;}}
+$("browserForm").addEventListener("submit",e=>{e.preventDefault();navigateBrowser($("browserAddress").value)});
+$("browserReload").onclick=()=>{const f=$("webBrowserFrame");try{f.contentWindow.location.reload()}catch{f.src=browserHistory[browserIndex]||"https://www.google.com/"}};
+$("browserBack").onclick=()=>{if(browserIndex>0){browserIndex--;navigateBrowser(browserHistory[browserIndex],false)}};
+$("browserForward").onclick=()=>{if(browserIndex<browserHistory.length-1){browserIndex++;navigateBrowser(browserHistory[browserIndex],false)}};
+$("browserHome").onclick=()=>navigateBrowser("https://www.google.com/");
+$("browserNewTab").onclick=()=>{window.open("https://www.google.com/","_blank","noopener");$("browserStatus").textContent="Opened a new browser tab. Chrome controls the actual tab."};
+$("browserBookmark").onclick=()=>{const url=browserHistory[browserIndex];if(!url)return;if(!browserBookmarks.includes(url)){browserBookmarks.push(url);localStorage.setItem("atlas-browser-bookmarks",JSON.stringify(browserBookmarks));paintBookmarks();$("browserStatus").textContent="Bookmark saved on this device."}else{$("browserStatus").textContent="This page is already bookmarked."}};
+document.querySelectorAll("[data-browser-url]").forEach(b=>b.addEventListener("click",()=>navigateBrowser(b.dataset.browserUrl)));
+$("webBrowserFrame").addEventListener("load",()=>{$("browserStatus").textContent="Page responded. If the view is blank or blocked, choose Open in new tab."});
+paintBookmarks();
+$("reloadFiddle").onclick=()=>{$("jsfiddleFrame").src="https://jsfiddle.net/"};
 
 async function runCompatibility(){
   const tests=[

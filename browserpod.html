@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220"><title>ATLAS · BrowserPod</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,Arial,sans-serif;background:#0b1220;color:#edf3ff}*{box-sizing:border-box}body{margin:0;padding:22px;max-width:1200px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{font-size:1.5rem;font-weight:850;letter-spacing:.12em;color:#a4dfc6}.muted{color:#aab7d2;line-height:1.5}.panel{margin-top:18px;padding:18px;border:1px solid #34435f;border-radius:16px;background:#111b2d}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}button,a{border:1px solid #536580;border-radius:10px;padding:10px 14px;background:#20324c;color:#fff;text-decoration:none;font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:wait}.status{color:#a4dfc6;font-size:.9rem}#terminal{min-height:55vh;margin-top:14px;border:1px solid #34435f;border-radius:12px;background:#050912;padding:12px;overflow:auto;color:#dce8ff}#terminal .xterm{height:100%}.warning{color:#f2d59a;font-size:.88rem;line-height:1.5}.checks{display:flex;gap:8px;flex-wrap:wrap}.check{padding:8px 10px;border:1px solid #34435f;border-radius:9px;color:#aab7d2}.good{color:#70d7a4}.bad{color:#ff9b9b} @media(max-width:600px){body{padding:12px}#terminal{min-height:60vh}}
+</style></head><body>
+<header class="top"><div><div class="brand">ATLAS / BROWSERPOD</div><div class="muted">Dedicated isolated local Linux workspace</div></div><a href="./index.html">← Back to ATLAS</a></header>
+<section class="panel"><h2>Local BrowserPod terminal</h2><p class="muted">This page is intentionally isolated from the main dashboard. The pod runs in this Chromebook's browser using WebAssembly. No API key is used; outbound networking is subject to browser CORS.</p>
+<div class="checks"><span class="check" id="iso">Checking isolation…</span><span class="check" id="sab">Checking shared memory…</span><span class="check" id="secure">Checking HTTPS…</span></div>
+<div class="bar" style="margin-top:14px"><button id="start">Start BrowserPod</button><button id="restart" disabled>Restart page</button><span class="status" id="status">Not started</span></div>
+<div id="terminal" aria-label="BrowserPod terminal">Press “Start BrowserPod” to boot the local environment.</div>
+<p class="warning">First startup downloads the BrowserPod runtime and disk blocks. Keep this tab open. On an 8 GB Chromebook, close other heavy tabs while it boots. Python is preview-only in BrowserPod; Bash, Node.js, npm, pnpm and Git are the more established tools.</p>
+<p class="muted">Powered by <a href="https://browserpod.io" target="_blank" rel="noopener">BrowserPod</a> · <a href="https://browserpod.io/docs/overview" target="_blank" rel="noopener">Official documentation</a></p></section>
+<script type="module">
+const $=id=>document.getElementById(id);let pod=null,terminal=null,booting=false;
+function mark(id,ok,yes,no){$(id).textContent=(ok?"✓ ":"✕ ")+(ok?yes:no);$(id).className="check "+(ok?"good":"bad")}
+const isolated=window.crossOriginIsolated===true,sab=typeof SharedArrayBuffer!=="undefined",secure=window.isSecureContext===true;
+mark("iso",isolated,"Cross-origin isolated","Isolation unavailable");mark("sab",sab,"SharedArrayBuffer available","SharedArrayBuffer unavailable");mark("secure",secure,"Secure HTTPS context","HTTPS required");
+$("start").onclick=async()=>{if(pod||booting)return;if(!isolated||!sab){$("status").textContent="Cannot start: isolation check failed";$("terminal").textContent="This dedicated page did not receive the required COOP/COEP headers. Check the Cloudflare /browserpod.html response headers and redeploy.";return;}booting=true;$("start").disabled=true;$("status").textContent="Loading BrowserPod runtime…";$("terminal").textContent="Downloading the official BrowserPod package and booting your local pod…";
+try{const {BrowserPod}=await import("https://esm.sh/@leaningtech/browserpod@4.1.0");pod=await BrowserPod.boot({storageKey:"atlas-browserpod-local-v2"});$("terminal").replaceChildren();terminal=await pod.createDefaultTerminal($("terminal"));$("status").textContent="Running locally · BrowserPod 4.1.0";await pod.run("bash",[],{terminal});}
+catch(e){pod=null;$("status").textContent="Startup failed";$("terminal").textContent="BrowserPod error: "+(e?.stack||e?.message||String(e))+"\n\nIf isolation checks are green, this is likely a runtime download, worker, or network issue—not the main ATLAS page.";$("start").disabled=false;}
+finally{booting=false;}};
+$("restart").onclick=()=>location.reload();
+</script></body></html>
