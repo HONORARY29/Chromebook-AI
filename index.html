@@ -18,6 +18,8 @@ button:disabled{opacity:.45}.toolbar,.remote-grid{display:flex;flex-wrap:wrap;ga
 .remote-frame-wrap{border:1px solid #303d5b;border-radius:12px;overflow:hidden;background:#0b1020}
 .remote-frame-bar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px;background:#17223a}
 .remote-frame{display:block;width:100%;height:min(72vh,760px);min-height:480px;border:0;background:#fff}
+.vm-frame{display:block;width:100%;height:min(78vh,820px);min-height:520px;border:0;background:#101522}
+.vm-note{color:#c6d2e8;font-size:.83rem;line-height:1.5;margin:10px 0 0}
 #remoteFrameStatus{font-size:.8rem;color:#aab7d2}
 #remoteSteps{font-size:.83rem;line-height:1.5;color:#c6d2e8}
 #chat{flex:1;min-height:220px;overflow:auto;display:flex;flex-direction:column;gap:10px}
@@ -45,6 +47,22 @@ button:disabled{opacity:.45}.toolbar,.remote-grid{display:flex;flex-wrap:wrap;ga
 </div>
 <div class="warning">Embedding is attempted here, but DextraDesk may block being displayed inside another website through its security headers or sign-in flow. If the panel stays blank or reports that it refused to connect, its provider does not permit this kind of embedding; the separate-site link is only a fallback, not an embedded connection. Never give remote access to anyone you do not trust. Keep your Windows PC secure and approve pairing only on the PC itself.</div>
 </section>
+<section class="remote-panel" id="linuxVmPanel">
+<h2>Browser Linux VM — Alpine</h2>
+<p class="muted">A lightweight Linux environment running in this browser tab. It does not use your Windows PC, ChromeOS Linux mode, or a cloud compute VM.</p>
+<div class="remote-frame-wrap">
+  <div class="remote-frame-bar">
+    <span id="vmFrameStatus">Starting the embedded Linux environment…</span>
+    <div class="toolbar">
+      <button id="reloadVm">Reload VM</button>
+      <a class="btn" href="https://linuxontab.com/shell/?pip=1&piph=400&pipw=600&pipx=20&pipy=50" target="_blank" rel="noopener">Open VM separately</a>
+    </div>
+  </div>
+  <iframe id="linuxVmFrame" class="vm-frame" src="https://linuxontab.com/shell/?pip=1&piph=400&pipw=600&pipx=20&pipy=50" title="Browser-based Alpine Linux environment" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen loading="lazy"></iframe>
+</div>
+<p class="vm-note"><strong>What this is:</strong> LinuxOnTab runs a Linux environment inside the browser using WebAssembly. The VM's CPU work runs on the Chromebook; it is not a remote cloud desktop. Its site says VM data and snapshots are stored in browser IndexedDB and that the environment can work offline after the page and image have been cached. The first load needs internet.</p>
+<p class="warning">Limits: this is an experimental lightweight Linux environment, not a full-performance Linux PC. v86-based builds support 32-bit Linux kernels, not standard 64-bit Linux kernels. Keep memory use modest alongside the local AI model. The VM is isolated from Chromebook system files; it cannot directly access your ChromeOS storage unless you explicitly use a supported file-transfer feature.</p>
+</section>
 <div id="progress" class="muted">First load downloads the model. Keep this tab open until initialization finishes.</div>
 <section id="chat" aria-live="polite"></section>
 <div class="composer"><textarea id="prompt" placeholder="Message your local AI…" disabled></textarea><button id="send" disabled>Send</button></div>
@@ -59,6 +77,8 @@ function draw(){const el=$("chat");el.replaceChildren();for(const m of messages)
 draw();
 $("reloadDextra").onclick=()=>{$("remoteFrameStatus").textContent="Reloading DextraDesk…";$("dextraFrame").src="https://app.dextradesk.com/"};
 $("dextraFrame").addEventListener("load",()=>{$("remoteFrameStatus").textContent="DextraDesk page loaded. If the panel is blank or sign-in fails, embedding may be blocked by DextraDesk."});
+$("reloadVm").onclick=()=>{$("vmFrameStatus").textContent="Reloading Linux environment…";$("linuxVmFrame").src="https://linuxontab.com/shell/?pip=1&piph=400&pipw=600&pipx=20&pipy=50"};
+$("linuxVmFrame").addEventListener("load",()=>{$("vmFrameStatus").textContent="Linux environment page loaded. Wait for the VM to finish booting inside the panel."});
 $("load").onclick=async()=>{if(engine||busy)return;busy=true;$("load").disabled=true;try{if(!navigator.gpu)throw Error("WebGPU is unavailable");$("status").textContent="Loading WebLLM…";const {CreateMLCEngine}=await import("https://esm.run/@mlc-ai/web-llm");engine=await CreateMLCEngine(MODEL,{initProgressCallback:p=>$("progress").textContent=(p.text||"Loading model…")+(typeof p.progress==="number"?" "+Math.round(p.progress*100)+"%":"")});$("status").textContent="Ready · Qwen 2.5 0.5B · Local inference";$("progress").textContent="Model loaded. Chat is ready.";$("prompt").disabled=false;$("send").disabled=false}catch(e){$("status").textContent="Model not loaded";$("progress").textContent="Error: "+(e.message||e);$("load").disabled=false}finally{busy=false}};
 async function send(){const text=$("prompt").value.trim();if(!text||!engine||busy)return;$("prompt").value="";messages.push({role:"user",content:text});const history=messages.map(m=>({...m}));messages.push({role:"assistant",content:""});draw();const bubble=$("chat").lastElementChild;busy=true;$("send").disabled=true;$("prompt").disabled=true;try{const stream=await engine.chat.completions.create({messages:[{role:"system",content:"You are a helpful assistant running locally on a Chromebook. Be practical, clear, and honest about limitations."},...history],temperature:.7,max_tokens:384,stream:true});let answer="";for await(const chunk of stream){answer+=chunk.choices?.[0]?.delta?.content||"";bubble.textContent=answer;$("chat").scrollTop=$("chat").scrollHeight}messages[messages.length-1].content=answer||"(No text returned.)";save()}catch(e){messages[messages.length-1].content="Generation error: "+(e.message||e);draw();save()}finally{busy=false;$("send").disabled=false;$("prompt").disabled=false;$("prompt").focus()}}
 $("send").onclick=send;$("prompt").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}};
