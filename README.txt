@@ -2,7 +2,7 @@ CHROMEBOOK AI — CLOUDFLARE PAGES BUILD
 
 This package preserves the existing five-tab dashboard:
 - AI Chat: local WebLLM/Qwen 2.5 0.5B interface and browser-local conversation history.
-- Remote Desktop: DextraDesk embed with a separate-tab fallback.
+- Remote Desktop: DextraDesk launch card that opens DextraDesk in a separate tab. The dashboard cannot read its live connection state; check connection status inside DextraDesk.
 - Linux VM: LinuxOnTab embed with a separate-tab fallback.
 - JSFiddle: embedded editor attempt, separate-tab fallback, and local sandboxed JS scratchpad.
 - Compatibility: tests SharedArrayBuffer, cross-origin isolation, WebGPU, secure context, Service Worker API availability, and actual Service Worker registration.
@@ -38,3 +38,18 @@ LIMITATIONS / HONEST STATUS
 
 ROLLBACK
 Keep the original GitHub Pages deployment and repository history. If the Cloudflare version breaks an integration, continue using the original GitHub Pages URL while we adjust the headers or embeds.
+
+
+REMOTE DESKTOP UPDATE
+- The Remote Desktop tab no longer tries to embed DextraDesk in an iframe.
+- Use the Launch DextraDesk button. It opens https://app.dextradesk.com/ in a separate tab and leaves Chromebook AI open.
+- Use the Return to Chromebook AI link or switch back to the original tab.
+- The dashboard intentionally does not claim to detect DextraDesk's live connection status, because cross-origin pages do not expose that state to this site.
+- The service-worker cache was bumped to v6 so clients request the updated dashboard shell.
+
+DEPLOY THIS UPDATE
+1. Extract the ZIP.
+2. Upload/commit index.html, sw.js, manifest.webmanifest, and README.txt to the same GitHub repository root used by your Cloudflare Git integration.
+3. Do not add a _headers file for this update; it is not included. This package does not change your current Cloudflare response-header configuration.
+4. Wait for the latest Git-connected deployment to show Ready/Success.
+5. On the Chromebook, open the Cloudflare URL and hard refresh (Ctrl+Shift+R). If the old view remains, close and reopen the tab once so the updated service worker can take control.

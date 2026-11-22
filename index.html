@@ -43,10 +43,22 @@ body{margin:0;background:#0b1020;color:#edf2ff;min-height:100vh}button,a.btn{fon
   </section>
 
   <section class="view" id="remoteView">
-    <div class="panel"><h3>DextraDesk — Remote PC</h3><p class="muted">Connect to your Windows PC from inside Chromebook AI. Sign in to DextraDesk below.</p>
-      <div class="frame-wrap"><div class="frame-bar"><span id="remoteFrameStatus" class="frame-status">Loading DextraDesk…</span><div class="toolbar"><button id="reloadDextra">Reload panel</button><a class="btn" href="https://app.dextradesk.com/" target="_blank" rel="noopener">Open separately</a></div></div>
-      <iframe id="dextraFrame" class="remote-frame" src="https://app.dextradesk.com/" title="DextraDesk remote desktop" allow="autoplay; fullscreen; clipboard-read; clipboard-write; gamepad" allowfullscreen></iframe></div>
-      <p class="warning">If DextraDesk's security headers or sign-in flow block embedding, use Open separately. Never approve remote access for someone you do not trust.</p>
+    <div class="panel">
+      <h3>DextraDesk — Remote PC</h3>
+      <p class="muted">DextraDesk opens in its own tab because its remote desktop and sign-in experience does not reliably run inside an embedded frame. Your Chromebook AI dashboard stays open in this tab.</p>
+      <div class="frame-wrap" style="padding:20px;background:linear-gradient(135deg,#17223a,#0b1020)">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+          <div aria-hidden="true" style="width:54px;height:54px;border-radius:14px;background:#263b60;display:grid;place-items:center;font-size:1.7rem">▣</div>
+          <div style="flex:1;min-width:190px"><div style="font-weight:700;font-size:1.15rem">DextraDesk Remote Desktop</div><div class="frame-status">External session · Opens in a separate tab</div></div>
+          <span class="frame-status" style="border:1px solid #3a4765;border-radius:999px;padding:6px 10px">Connection status: check in DextraDesk</span>
+        </div>
+        <p class="muted">Launch DextraDesk, sign in, and choose your Windows PC there. To return, switch back to this Chromebook AI tab.</p>
+        <div class="toolbar" style="margin-top:16px">
+          <a class="btn" style="background:#315b96;border-color:#547bb4;padding:12px 18px;font-weight:650" href="https://app.dextradesk.com/" target="_blank" rel="noopener noreferrer">Launch DextraDesk ↗</a>
+          <a class="btn" href="./" target="_self">Return to Chromebook AI</a>
+        </div>
+      </div>
+      <p class="warning">The dashboard cannot read DextraDesk's live connection state from another tab. Confirm that your PC is online inside DextraDesk. Only connect to devices you own or are authorized to access.</p>
     </div>
   </section>
 
@@ -96,8 +108,6 @@ try{messages=JSON.parse(localStorage.getItem("chromebook-ai-messages")||"[]")}ca
 function save(){try{localStorage.setItem("chromebook-ai-messages",JSON.stringify(messages))}catch{$("progress").textContent="Browser storage is full; conversation could not be saved."}}
 function draw(){const el=$("chat");el.replaceChildren();for(const m of messages){const d=document.createElement("div");d.className="bubble "+(m.role==="user"?"user":"assistant");d.textContent=m.content;el.append(d)}el.scrollTop=el.scrollHeight}
 draw();
-$("reloadDextra").onclick=()=>{$("remoteFrameStatus").textContent="Reloading DextraDesk…";$("dextraFrame").src="https://app.dextradesk.com/"};
-$("dextraFrame").addEventListener("load",()=>{$("remoteFrameStatus").textContent="DextraDesk frame loaded; sign in or connect if prompted."});
 const vmUrl="https://linuxontab.com/shell/?pip=1&piph=400&pipw=600&pipx=20&pipy=50";
 $("reloadVm").onclick=()=>{$("vmFrameStatus").textContent="Reloading Linux environment…";$("linuxVmFrame").src=vmUrl};
 $("linuxVmFrame").addEventListener("load",()=>{$("vmFrameStatus").textContent="LinuxOnTab page loaded. Wait for the VM to boot."});
