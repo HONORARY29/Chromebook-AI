@@ -56,3 +56,15 @@ DEPLOY THIS UPDATE
 
 
 Remote Desktop update: Restores the original embedded DextraDesk panel with Reload panel and Open separately fallback. DextraDesk may still refuse iframe embedding through its own security policy.
+
+
+REMOTE DESKTOP LINKS UPDATE (v8)
+- Replaced the embedded DextraDesk frame with a link to https://flver.cablex.org/ as requested.
+- Added a direct DextraDesk fallback link: https://app.dextradesk.com/.
+- Added Chrome Remote Desktop access: https://remotedesktop.google.com/access.
+- Added Google's Remote Support page: https://remotedesktop.google.com/support.
+- The proxy address was supplied by the user and could not be independently verified from this build environment. If the proxy expects a route or target URL, its owner may need to provide the exact URL format.
+- Service-worker cache version bumped to v8.
+
+DEPLOY
+Upload index.html, sw.js, manifest.webmanifest, and README.txt to the GitHub repository root, commit, wait for Cloudflare's Git deployment to finish, then refresh the Cloudflare site.
