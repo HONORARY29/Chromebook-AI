@@ -53,3 +53,6 @@ DEPLOY THIS UPDATE
 3. Do not add a _headers file for this update; it is not included. This package does not change your current Cloudflare response-header configuration.
 4. Wait for the latest Git-connected deployment to show Ready/Success.
 5. On the Chromebook, open the Cloudflare URL and hard refresh (Ctrl+Shift+R). If the old view remains, close and reopen the tab once so the updated service worker can take control.
+
+
+Remote Desktop update: Restores the original embedded DextraDesk panel with Reload panel and Open separately fallback. DextraDesk may still refuse iframe embedding through its own security policy.
