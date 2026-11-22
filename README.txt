@@ -56,11 +56,3 @@ DEPLOY THIS UPDATE
 
 
 Remote Desktop update: Restores the original embedded DextraDesk panel with Reload panel and Open separately fallback. DextraDesk may still refuse iframe embedding through its own security policy.
-
-
-NOVA WEB BROWSER UPDATE
-- Replaces the basic URL bar with an original browser-style start page called NOVA.
-- Includes search/address bar, quick-launch shortcuts, add-shortcut prompt, browser-style tab strip, back/forward/reload/home controls, bookmarks saved in localStorage, and an Open separately fallback.
-- This is a browser workspace using the Chromebook's Chrome engine for embedded frames, not the Firefox application or Gecko engine. Many sites block iframe embedding; Open separately is the fallback.
-- No Cloudflare headers are included or modified in this ZIP. Keep your existing Cloudflare response-header configuration as-is.
-- Service-worker cache bumped to v8.
