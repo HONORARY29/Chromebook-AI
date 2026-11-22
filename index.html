@@ -14,6 +14,12 @@ body{margin:0;background:#0b1020;color:#edf2ff;min-height:100vh}button,a.btn{fon
 .sidebar-foot{margin-top:auto;color:#91a0bd;font-size:.75rem;line-height:1.5;padding:8px 10px}
 .content{min-width:0;padding:22px;max-width:1500px;width:100%;margin:0 auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.topbar h2{font-size:1.35rem;margin:0}.status{color:#aab7d2;font-size:.86rem}.view{display:none}.view.active{display:block}.panel{border:1px solid #3a4765;border-radius:14px;padding:16px;background:#111827;margin-bottom:14px}.panel h3{font-size:1.05rem;margin:0 0 8px}.muted{color:#aab7d2;font-size:.88rem;line-height:1.5}.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.frame-wrap{border:1px solid #303d5b;border-radius:12px;overflow:hidden;background:#0b1020}.frame-bar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px;background:#17223a}.frame-status{font-size:.8rem;color:#aab7d2}.remote-frame,.browser-frame,.jsfiddle-frame{display:block;width:100%;height:min(76vh,850px);min-height:500px;border:0;background:#fff}.vm-note,.warning{font-size:.83rem;line-height:1.5;margin:10px 0 0}.vm-note{color:#c6d2e8}.warning{color:#f2d59a}.test-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:14px 0}.test-item{border:1px solid #303d5b;border-radius:10px;padding:12px;background:#17223a}.test-item .name{color:#aab7d2;font-size:.8rem}.test-item .value{font-size:1.1rem;font-weight:650;margin-top:4px}.good{color:#70d7a4}.bad{color:#ff9b9b}.unknown{color:#f1d28c}.codebox{width:100%;min-height:160px;resize:vertical;background:#080d18;color:#eaf0ff;border:1px solid #3a4765;border-radius:10px;padding:12px;font:13px/1.5 ui-monospace,monospace}.output{min-height:100px;max-height:300px;overflow:auto;white-space:pre-wrap;background:#080d18;border:1px solid #303d5b;border-radius:10px;padding:12px;color:#d8e4ff;font:13px/1.5 ui-monospace,monospace}
 #chat{height:min(58vh,620px);min-height:250px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:4px 2px}.bubble{white-space:pre-wrap;overflow-wrap:anywhere;padding:12px 14px;border-radius:14px;max-width:88%;line-height:1.45}.user{align-self:flex-end;background:#254a80}.assistant{align-self:flex-start;background:#1a2540;border:1px solid #303d5b}.composer{display:flex;gap:8px;margin-top:12px}textarea.prompt{flex:1;min-height:54px;resize:vertical;border:1px solid #3a4765;border-radius:12px;padding:12px;color:#fff;background:#111827;font:inherit}
+
+/* NOVA browser workspace */
+.browser-shell{--nova-accent:#9bd8c2;border:1px solid #2b3b4c;border-radius:18px;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,#203b43 0%,#111c2b 48%,#0c1421 100%);min-height:calc(100vh - 110px);padding:0 18px 14px;box-shadow:0 18px 55px #0005}
+.browser-brand{display:flex;align-items:center;gap:12px;padding:17px 4px 14px;border-bottom:1px solid #ffffff12}.browser-mark{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#a7e5c8,#4b9d91);color:#102a2b;font-weight:900;font-size:1.2rem;box-shadow:0 0 25px #8bd5b344}.browser-brand-name{font-size:1rem;font-weight:850;letter-spacing:.2em}.browser-brand-sub{font-size:.75rem;color:#a7b9c5}.browser-private-note{margin-left:auto;color:#9bb6ad;font-size:.66rem;letter-spacing:.12em;border:1px solid #45665f;border-radius:99px;padding:6px 9px}
+.browser-toolbar{display:flex;align-items:center;gap:7px;padding:12px 0 9px}.browser-toolbar>button{min-width:36px;padding:8px 10px;border-radius:10px;background:#192b38;border-color:#3a5260}.browser-address-form{display:flex;align-items:center;gap:8px;flex:1;min-width:100px;border:1px solid #526c72;border-radius:12px;background:#09141f;padding:3px 5px 3px 12px}.address-search-icon{color:#a6d9c6;font-size:1.25rem}.browser-address-form input,.home-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#f2f8f7;padding:9px 2px;font:inherit}.address-go{padding:7px 13px!important;background:#b0e3ce!important;color:#102a2a!important;border:0!important;font-weight:700}.browser-open-external{white-space:nowrap;color:#c4ded5;font-size:.78rem;text-decoration:none;padding:8px 10px;border:1px solid #3a5260;border-radius:10px}.browser-tabs{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px}.browser-tab{display:flex;align-items:center;gap:8px;max-width:190px;white-space:nowrap;background:#132331;border:1px solid #344c57;border-radius:9px 9px 5px 5px;padding:7px 10px;color:#c8d8d6;font-size:.78rem}.browser-tab.active{background:#263d43;border-color:#79bba4;color:#fff}.browser-tab button{border:0;background:transparent;padding:0 2px;color:#b9cbc8}.browser-home-screen{position:relative;min-height:440px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:34px 12px 25px;overflow:hidden}.home-orbit{position:absolute;width:270px;height:270px;border:1px solid #8ed8bd18;border-radius:50%;top:25px;left:calc(50% - 135px);pointer-events:none}.home-orbit:before,.home-orbit:after{content:"";position:absolute;border:1px solid #8ed8bd14;border-radius:50%;inset:25px}.home-orbit:after{inset:55px}.home-orbit span{position:absolute;width:9px;height:9px;border-radius:50%;background:#9bd8c2;top:32px;right:44px;box-shadow:0 0 18px #9bd8c2}.home-orbit i{position:absolute;width:5px;height:5px;border-radius:50%;background:#d7c68c;bottom:49px;left:32px}.home-title{position:relative;font-size:clamp(1.8rem,5vw,3.1rem);font-weight:750;letter-spacing:-.04em;margin-top:30px}.home-title em{font-style:normal;color:#a4dfc6}.home-subtitle{position:relative;color:#a8bbc0;margin:8px 0 23px;font-size:.92rem}.home-search{position:relative;display:flex;align-items:center;gap:10px;width:min(720px,94%);border:1px solid #83bda9;border-radius:16px;background:#0b1922;padding:5px 6px 5px 17px;box-shadow:0 0 0 4px #8acdb01a,0 12px 40px #0004}.home-search>span{font-size:1.4rem;color:#a6dec8}.home-search button{background:#a9dfc8;color:#102b29;border:0;border-radius:11px;font-weight:750;padding:10px 16px}.shortcut-heading{width:min(720px,94%);display:flex;justify-content:space-between;align-items:center;margin:35px 0 12px;color:#a6b9b9;font-size:.68rem;letter-spacing:.14em}.shortcut-heading button{font-size:.75rem;padding:6px 10px;background:#172c35}.browser-shortcuts{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;width:min(720px,94%)}.shortcut-card{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:91px;padding:14px 12px;background:#162a35;border:1px solid #38525a;border-radius:15px;color:#dcebe7;font-size:.76rem}.shortcut-card:hover{transform:translateY(-2px);border-color:#91cdb5;background:#203b42}.shortcut-icon{width:35px;height:35px;border-radius:12px;display:grid;place-items:center;background:#284a4a;color:#b5ebd0;font-size:1rem;font-weight:800}.home-footer{margin-top:36px;color:#718a91;font-size:.72rem}.browser-page-area{border:1px solid #344d58;border-radius:12px;overflow:hidden;background:#fff}.browser-page-area[hidden]{display:none}.browser-page-status{background:#172b37;color:#b9d2cb;font-size:.76rem;padding:8px 11px}.browser-frame{height:min(68vh,780px);min-height:430px}.browser-frame-help{background:#13232d;color:#9fb4b4;font-size:.73rem;padding:8px 11px}.browser-bookmarks{border-top:1px solid #ffffff17;padding:12px 2px 2px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.bookmark-label{font-size:.65rem;letter-spacing:.12em;color:#89a49d}.bookmark-list{display:flex;gap:7px;flex-wrap:wrap}.bookmark-chip{border:1px solid #344e56;background:#152832;color:#c9ddd6;border-radius:99px;padding:6px 10px;font-size:.73rem}.bookmark-empty{color:#718a91;font-size:.73rem}.browser-engine-note{color:#718a91;font-size:.68rem;line-height:1.45;margin:12px 2px 0}
+@media(max-width:720px){.browser-shell{padding:0 10px 12px}.browser-toolbar{gap:4px;flex-wrap:wrap}.browser-open-external{font-size:.7rem}.browser-home-screen{min-height:430px;padding-top:24px}.home-search{width:100%}.shortcut-card{min-width:75px}.browser-frame{min-height:380px;height:65vh}}
 @media(max-width:720px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:sticky;z-index:5;top:0;padding:10px;border-right:0;border-bottom:1px solid #29324a;gap:8px}.brand{display:flex;align-items:center;justify-content:space-between;padding:2px 6px 8px}.brand p{max-width:48%;text-align:right}.nav{flex-direction:row;overflow-x:auto;padding-bottom:2px}.nav button{white-space:nowrap;width:auto;flex:0 0 auto;padding:9px}.sidebar-foot{display:none}.content{padding:14px}.remote-frame,.browser-frame,.jsfiddle-frame{min-height:420px;height:70vh}.composer{flex-direction:column}.bubble{max-width:96%}}
 </style></head>
 <body>
@@ -56,22 +62,46 @@ body{margin:0;background:#0b1020;color:#edf2ff;min-height:100vh}button,a.btn{fon
   </section>
 
   <section class="view" id="browserView">
-    <div class="panel"><h3>Web Browser</h3><p class="muted">Browse websites inside Chromebook AI when they allow embedding. Some sites block display inside another website; use Open separately for those pages.</p>
-      <form id="browserForm" class="toolbar" style="margin:12px 0" autocomplete="off">
-        <input id="browserAddress" type="text" inputmode="url" value="https://example.com/" aria-label="Website address" placeholder="Enter a website address" style="flex:1;min-width:180px;background:#080d18;color:#fff;border:1px solid #3a4765;border-radius:10px;padding:11px;font:inherit">
-        <button type="submit">Go</button>
-        <button type="button" id="browserReload">Reload</button>
-        <a class="btn" id="browserOpenSeparate" href="https://example.com/" target="_blank" rel="noopener noreferrer">Open separately</a>
-      </form>
-      <div class="toolbar" style="margin-bottom:10px">
-        <button type="button" data-browser-url="https://www.google.com/">Google</button>
-        <button type="button" data-browser-url="https://www.wikipedia.org/">Wikipedia</button>
-        <button type="button" data-browser-url="https://example.com/">Example</button>
+    <div class="browser-shell">
+      <div class="browser-brand"><div class="browser-mark">N</div><div><div class="browser-brand-name">NOVA</div><div class="browser-brand-sub">A browser space inside Chromebook AI</div></div><span class="browser-private-note">LOCAL SHORTCUTS</span></div>
+      <div class="browser-toolbar">
+        <button type="button" id="browserBack" title="Back" aria-label="Back">←</button>
+        <button type="button" id="browserForward" title="Forward" aria-label="Forward">→</button>
+        <button type="button" id="browserReload" title="Reload" aria-label="Reload">↻</button>
+        <button type="button" id="browserHome" title="Home" aria-label="Home">⌂</button>
+        <form id="browserForm" class="browser-address-form" autocomplete="off">
+          <span class="address-search-icon">⌕</span>
+          <input id="browserAddress" type="text" inputmode="url" aria-label="Search or enter address" placeholder="Search the web or enter an address">
+          <button type="submit" class="address-go">Go</button>
+        </form>
+        <button type="button" id="browserNewTab" title="New tab">＋</button>
+        <button type="button" id="browserBookmark" title="Bookmark this page">☆</button>
+        <a class="browser-open-external" id="browserOpenSeparate" href="https://www.google.com/" target="_blank" rel="noopener noreferrer">Open separately ↗</a>
       </div>
-      <div class="frame-wrap"><div class="frame-bar"><span id="browserStatus" class="frame-status">Ready · enter a website address</span></div>
-        <iframe id="webBrowserFrame" class="browser-frame" src="https://example.com/" title="In-app web browser" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
+      <div class="browser-tabs" id="browserTabs" aria-label="Browser tabs"></div>
+      <div id="browserHomeScreen" class="browser-home-screen">
+        <div class="home-orbit" aria-hidden="true"><span></span><i></i></div>
+        <div class="home-title">Find your next <em>destination.</em></div>
+        <p class="home-subtitle">Search the web or jump back into a favorite.</p>
+        <form id="browserHomeForm" class="home-search" autocomplete="off">
+          <span>⌕</span><input id="browserHomeSearch" placeholder="Search or enter a URL" aria-label="Search or enter a URL"><button type="submit">Explore</button>
+        </form>
+        <div class="shortcut-heading"><span>QUICK ACCESS</span><button type="button" id="addShortcut">＋ Add shortcut</button></div>
+        <div class="browser-shortcuts" id="browserShortcuts">
+          <button class="shortcut-card" data-browser-url="https://www.google.com/"><span class="shortcut-icon">G</span><span>Google</span></button>
+          <button class="shortcut-card" data-browser-url="https://www.wikipedia.org/"><span class="shortcut-icon">W</span><span>Wikipedia</span></button>
+          <button class="shortcut-card" data-browser-url="https://www.youtube.com/"><span class="shortcut-icon">▶</span><span>YouTube</span></button>
+          <button class="shortcut-card" data-browser-url="https://www.github.com/"><span class="shortcut-icon">⌘</span><span>GitHub</span></button>
+        </div>
+        <div class="home-footer">Your shortcuts and bookmarks stay in this browser profile.</div>
       </div>
-      <p class="warning">This is an embedded web viewer, not a full standalone browser. Websites can refuse to load in an embedded frame for security reasons. The Open separately link is provided for those sites. Do not enter passwords or sensitive information into unfamiliar websites.</p>
+      <div class="browser-page-area" id="browserPageArea" hidden>
+        <div class="browser-page-status" id="browserStatus">Ready</div>
+        <iframe id="webBrowserFrame" class="browser-frame" src="about:blank" title="NOVA browser page" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
+        <div class="browser-frame-help">If a site refuses to appear here, use <strong>Open separately</strong>. Some websites block embedding.</div>
+      </div>
+      <div class="browser-bookmarks"><div class="bookmark-label">BOOKMARKS</div><div id="browserBookmarkList" class="bookmark-list"><span class="bookmark-empty">No bookmarks yet — use ☆ to save a page.</span></div></div>
+      <p class="browser-engine-note">NOVA is an original browser-style workspace, not the Firefox application or engine. Pages shown here use your Chromebook's Chrome browser engine; sites can limit embedded viewing.</p>
     </div>
   </section>
 
@@ -112,22 +142,30 @@ try{messages=JSON.parse(localStorage.getItem("chromebook-ai-messages")||"[]")}ca
 function save(){try{localStorage.setItem("chromebook-ai-messages",JSON.stringify(messages))}catch{$("progress").textContent="Browser storage is full; conversation could not be saved."}}
 function draw(){const el=$("chat");el.replaceChildren();for(const m of messages){const d=document.createElement("div");d.className="bubble "+(m.role==="user"?"user":"assistant");d.textContent=m.content;el.append(d)}el.scrollTop=el.scrollHeight}
 draw();
-function normalizeBrowserUrl(raw){
-  let value=raw.trim();
-  if(!value)throw new Error("Enter a website address.");
-  if(!/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(value))value="https://"+value;
-  const url=new URL(value);
-  if(url.protocol!=="https:"&&url.protocol!=="http:")throw new Error("Only http:// and https:// website addresses are allowed.");
-  return url.href;
-}
-function navigateBrowser(raw){
-  try{const url=normalizeBrowserUrl(raw);$("browserAddress").value=url;$("browserOpenSeparate").href=url;$("browserStatus").textContent="Loading "+url;$("webBrowserFrame").src=url;}
-  catch(e){$("browserStatus").textContent=e.message;}
-}
+function normalizeBrowserUrl(raw){let v=String(raw||"").trim();if(!v)throw Error("Enter a search or website address.");if(!/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(v)){if(v.includes(".")&&!v.includes(" "))v="https://"+v;else v="https://www.google.com/search?q="+encodeURIComponent(v)}const u=new URL(v);if(!["http:","https:"].includes(u.protocol))throw Error("Only http and https addresses are supported.");return u.href}
+let browserTabs=[{id:1,title:"New tab",url:"",history:[],index:-1}],activeBrowserTab=1,nextBrowserTab=2;
+const browserStoreKey="nova-browser-settings-v1";
+function currentBrowserTab(){return browserTabs.find(t=>t.id===activeBrowserTab)}
+function renderBrowserTabs(){const wrap=$("browserTabs");wrap.innerHTML="";browserTabs.forEach(t=>{const b=document.createElement("div");b.className="browser-tab"+(t.id===activeBrowserTab?" active":"");const label=document.createElement("span");label.textContent=t.title;b.append(label);b.onclick=()=>switchBrowserTab(t.id);if(browserTabs.length>1){const x=document.createElement("button");x.type="button";x.textContent="×";x.title="Close tab";x.onclick=e=>{e.stopPropagation();closeBrowserTab(t.id)};b.append(x)}wrap.append(b)})}
+function switchBrowserTab(id){activeBrowserTab=id;const t=currentBrowserTab();renderBrowserTabs();if(t.url)showBrowserPage(t.url,false);else showBrowserHome()}
+function newBrowserTab(){const t={id:nextBrowserTab++,title:"New tab",url:"",history:[],index:-1};browserTabs.push(t);activeBrowserTab=t.id;renderBrowserTabs();showBrowserHome()}
+function closeBrowserTab(id){if(browserTabs.length===1){const t=currentBrowserTab();t.url="";t.history=[];t.index=-1;showBrowserHome();renderBrowserTabs();return}const i=browserTabs.findIndex(t=>t.id===id);browserTabs=browserTabs.filter(t=>t.id!==id);if(activeBrowserTab===id)activeBrowserTab=browserTabs[Math.max(0,i-1)].id;switchBrowserTab(activeBrowserTab)}
+function showBrowserHome(){$("browserHomeScreen").hidden=false;$("browserPageArea").hidden=true;$("browserAddress").value="";$("browserOpenSeparate").href="https://www.google.com/"}
+function showBrowserPage(url,push=true){const t=currentBrowserTab();if(push){t.history=t.history.slice(0,t.index+1);t.history.push(url);t.index=t.history.length-1}t.url=url;t.title=new URL(url).hostname.replace(/^www\./,"")||"Page";$("browserHomeScreen").hidden=true;$("browserPageArea").hidden=false;$("browserAddress").value=url;$("browserOpenSeparate").href=url;$("browserStatus").textContent="Opening "+url;$("webBrowserFrame").src=url;renderBrowserTabs();$("browserBack").disabled=t.index<=0;$("browserForward").disabled=t.index>=t.history.length-1}
+function navigateBrowser(raw){try{showBrowserPage(normalizeBrowserUrl(raw),true)}catch(e){$("browserStatus").textContent=e.message}}
 $("browserForm").addEventListener("submit",e=>{e.preventDefault();navigateBrowser($("browserAddress").value)});
-$("browserReload").onclick=()=>navigateBrowser($("browserAddress").value);
+$("browserHomeForm").addEventListener("submit",e=>{e.preventDefault();navigateBrowser($("browserHomeSearch").value)});
+$("browserReload").onclick=()=>{const t=currentBrowserTab();if(t.url){$("browserStatus").textContent="Reloading…";$("webBrowserFrame").src=t.url}};
+$("browserHome").onclick=showBrowserHome;$("browserNewTab").onclick=newBrowserTab;
+$("browserBack").onclick=()=>{const t=currentBrowserTab();if(t.index>0){t.index--;showBrowserPage(t.history[t.index],false)}};
+$("browserForward").onclick=()=>{const t=currentBrowserTab();if(t.index<t.history.length-1){t.index++;showBrowserPage(t.history[t.index],false)}};
+$("webBrowserFrame").addEventListener("load",()=>{$("browserStatus").textContent="Page response loaded. If the view is blank or blocked, use Open separately."});
+$("browserBookmark").onclick=()=>{const t=currentBrowserTab();if(!t.url){$("browserStatus").textContent="Open a page before bookmarking.";return}let items=[];try{items=JSON.parse(localStorage.getItem(browserStoreKey)||"{}").bookmarks||[]}catch{}if(!items.some(x=>x.url===t.url)){items.push({title:t.title,url:t.url});saveBrowserSettings(items)}renderBrowserBookmarks()};
+function saveBrowserSettings(bookmarks){try{const old=JSON.parse(localStorage.getItem(browserStoreKey)||"{}");localStorage.setItem(browserStoreKey,JSON.stringify({...old,bookmarks}))}catch{}}
+function renderBrowserBookmarks(){let items=[];try{items=JSON.parse(localStorage.getItem(browserStoreKey)||"{}").bookmarks||[]}catch{}const box=$("browserBookmarkList");box.innerHTML="";if(!items.length){box.innerHTML='<span class="bookmark-empty">No bookmarks yet — use ☆ to save a page.</span>';return}items.forEach(item=>{const b=document.createElement("button");b.className="bookmark-chip";b.textContent=item.title;b.onclick=()=>navigateBrowser(item.url);box.append(b)})}
+$("addShortcut").onclick=()=>{const name=prompt("Name for this shortcut:");if(!name)return;const raw=prompt("Website address:");if(!raw)return;try{const url=normalizeBrowserUrl(raw);const b=document.createElement("button");b.className="shortcut-card";b.innerHTML='<span class="shortcut-icon">↗</span><span></span>';b.lastElementChild.textContent=name;b.onclick=()=>navigateBrowser(url);$("browserShortcuts").append(b)}catch(e){alert(e.message)}};
 document.querySelectorAll("[data-browser-url]").forEach(b=>b.addEventListener("click",()=>navigateBrowser(b.dataset.browserUrl)));
-$("webBrowserFrame").addEventListener("load",()=>{$("browserStatus").textContent="Page load event received. If the page is blank or blocked, use Open separately."});
+renderBrowserTabs();renderBrowserBookmarks();showBrowserHome();
 $("reloadFiddle").onclick=()=>{$("jsfiddleFrame").src="https://jsfiddle.net/"};
 async function runCompatibility(){
   const tests=[
